@@ -5,7 +5,6 @@
 #define TEMP_LED_PIN 16
 #define FLAME_LED_PIN 19
 
-// Function Prototypes
 void initLEDs(); // Initialize GPIO pins
 void turnOnGasLed();
 void turnOffGasLed();

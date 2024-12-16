@@ -7,6 +7,7 @@
 #include "led.h"
 #include "bluetooth.h"
 
+extern bool buzzerStatus; // Declare the global variable
 
 void initializeFlameDetector()
 {
@@ -29,13 +30,12 @@ void checkFlameLevel(uint16_t flameLevel)
     if (flameLevel < FLAME_THRESHOLD)
     {
         turnOnFlameLed();
-        // buzzer_on();
+        buzzerStatus = true; // Set the global variable
         sendData("Flame detected! Warning!\n");
     }
     else
     {
         turnOffFlameLed();
-        buzzer_off();
     }
 }
 

@@ -6,6 +6,9 @@
 #include "buzzer.h"
 #include "led.h"
 #include "bluetooth.h"
+#include "DCfan.h"
+
+extern bool buzzerStatus; // Declare the global variable
 
 void initializeGasDetector()
 {
@@ -23,19 +26,39 @@ uint16_t readGasLevel()
     return gasLevel;
 }
 
+void adjustFanSpeed(uint16_t gasLevel)
+{
+    initDCFan();
+    buzzer_init();
+    
+    uint8_t fanSpeed = 0;
+    if (gasLevel > GAS_THRESHOLD)
+    {
+        fanSpeed = (gasLevel - GAS_THRESHOLD) * 255 / (MAX_GAS_LEVEL - GAS_THRESHOLD); // Scale to 0-255
+        if (fanSpeed > 255) fanSpeed = 255; // Cap the speed at 255
+        buzzer_on();
+    }
+    else
+    {
+        fanSpeed = 0;
+        buzzer_off();
+    }
+    setFanSpeed(fanSpeed, true);
+}
+
 void checkGasLevel(uint16_t gasLevel)
 {
     if (gasLevel > GAS_THRESHOLD)
     {
         turnOnGasLed();
-        // buzzer_on();
-        sendData("Gas detected! Warning!\n");
+        buzzerStatus = true; // Set the global variable
+        sendData("Gas detected! Warning!\n");  
     }
     else
     {
         turnOffGasLed();
-        // buzzer_off();
     }
+    adjustFanSpeed(gasLevel);
 }
 
 

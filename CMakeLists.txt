@@ -74,6 +74,7 @@ target_link_libraries(embedded2
         hardware_adc   # Add this for adc.h
         hardware_pwm   # Add this for pwm.h
         hardware_uart
+        
         )
 
 pico_add_extra_outputs(embedded2)

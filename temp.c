@@ -7,6 +7,8 @@
 #include "bluetooth.h"
 #include "buzzer.h"
 
+extern bool buzzerStatus; // Declare the global variable
+
 void initializeTemperatureSensor()
 {
     adc_gpio_init(TEMP_SENSOR_PIN);
@@ -28,12 +30,12 @@ void checkTemperature(float temperature)
     if (temperature < TEMP_THRESHOLD)
     {
         turnOnTempLed();
-        buzzer_on();
+        buzzerStatus = true; // Set the global variable
         sendData("High temperature detected! Warning!\n");
     }
     else
     {
-        buzzer_off();
+        //buzzer_off();
         turnOffTempLed();
     }
 }

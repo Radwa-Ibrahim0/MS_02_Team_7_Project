@@ -13,6 +13,8 @@
 #include "flame.h"
 #include "bluetooth.h"
 
+bool buzzerStatus = false; // Define the global variable
+
 int main()
 {
     stdio_init_all();
@@ -20,6 +22,8 @@ int main()
     initLEDs();
     adc_init();
     initBluetoothModule();
+    initDCFan();
+
 
     for (int i = 0; i < 3; i++)
     {
@@ -37,6 +41,8 @@ int main()
 
     while (true)
     {
+        buzzerStatus = false; // Reset the global variable
+
         initializeGasDetector();
         uint16_t gasLevel = readGasLevel();
         checkGasLevel(gasLevel);
@@ -49,12 +55,15 @@ int main()
         uint16_t flameLevel = readFlameLevel();
         checkFlameLevel(flameLevel);
 
-        initDCFan();
-        for(int i = 0 ; i<255 ; i+=80){
-            setFanSpeed(i , true);
-            sleep_ms(2000); 
+        if (buzzerStatus)
+        {
+            buzzer_on();
         }
-        stopFan();
+        else
+        {
+            buzzer_off();
+        }
+
         sleep_ms(1000); 
 
     }
